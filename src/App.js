@@ -1,10 +1,12 @@
 import React from 'react';
 import SensorData from './components/SensorData';
+import MapComponent from './components/MapComponent';  // Import the map component
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-blue-800 bg-pattern flex items-center justify-center">
+    <div className="min-h-screen bg-blue-800 bg-pattern flex flex-col items-center justify-center space-y-6">
       <SensorData />
+      <MapComponent />  {/* Render the map below the sensor data */}
     </div>
   );
 };
