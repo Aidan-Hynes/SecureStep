@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
+const ResetButton = ({ setStatus }) => {
+  const handleReset = () => {
+    setStatus('Normal');  // Call setStatus to reset the status
+  };
+
+  return (
+    <button
+      onClick={handleReset}
+      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Reset
+    </button>
+  );
+};
+
 const SensorData = () => {
   const [accelX, setAccelX] = useState(null);
   const [accelY, setAccelY] = useState(null);
@@ -9,7 +22,7 @@ const SensorData = () => {
   const [gyroY, setGyroY] = useState(null);
   const [gyroZ, setGyroZ] = useState(null);
   const [gyroMag, setGyroMag] = useState(null);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('Normal');
   const [error, setError] = useState(null);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
@@ -51,8 +64,6 @@ const SensorData = () => {
 
         if (accelMag > 8) {
           setStatus('Fallen');
-        } else {
-          setStatus('Normal');
         }
 
         setError(null);
@@ -106,6 +117,10 @@ const SensorData = () => {
             <h2 className="text-2xl font-semibold text-gray-800 mb-2">Location Data:</h2>
             <p className="text-xl text-gray-700">Latitude: <span className="font-bold">{lat}</span></p>
             <p className="text-xl text-gray-700">Longitude: <span className="font-bold">{lng}</span></p>
+          </div>
+          <div className="p-4">
+            <h1 className="text-xl mb-4">Status: {status}</h1>
+            <ResetButton setStatus={setStatus} />
           </div>
 
           <p className={`text-2xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>
