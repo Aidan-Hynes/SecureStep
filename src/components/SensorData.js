@@ -63,8 +63,7 @@ const SensorData = () => {
         setLat(latMatch ? parseFloat(latMatch[1]) : null);
         setLng(lngMatch ? parseFloat(lngMatch[1]) : null);
 
-        if (Math.abs(accelData["Accel-X"]) > 10 || Math.abs(accelData["Accel-Y"]) > 10 || Math.abs(accelData["Accel-Z"]) > 10 ||
-            Math.abs(gyroData["Gyro-X"]) > 10 || Math.abs(gyroData["Gyro-Y"]) > 10 || Math.abs(gyroData["Gyro-Z"]) > 10) {
+        if (true) {
           setStatus('Fallen');
         } else {
           setStatus('Normal');
@@ -94,7 +93,7 @@ const SensorData = () => {
             <p className="text-xl text-gray-700">Accel-X: <span className="font-bold">{accelX}</span></p>
             <p className="text-xl text-gray-700">Accel-Y: <span className="font-bold">{accelY}</span></p>
             <p className="text-xl text-gray-700">Accel-Z: <span className="font-bold">{accelZ}</span></p>
-            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{accelMag}</span></p>
+            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{lat}</span></p>
           </div>
 
           <div className="mb-6">
@@ -102,7 +101,7 @@ const SensorData = () => {
             <p className="text-xl text-gray-700">Gyro-X: <span className="font-bold">{gyroX}</span></p>
             <p className="text-xl text-gray-700">Gyro-Y: <span className="font-bold">{gyroY}</span></p>
             <p className="text-xl text-gray-700">Gyro-Z: <span className="font-bold">{gyroZ}</span></p>
-            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{gyroMag}</span></p>
+            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{lng}</span></p>
           </div>
 
           <p className={`text-2xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>
