@@ -26,20 +26,6 @@ const SensorData = () => {
         const textResponse = await response.text();
         console.log('Response:', textResponse);
 
-        /*
-        const dataParts = textResponse.split('},{');
-        const accelData = JSON.parse(dataParts[0] + '}');
-        const gyroData = JSON.parse('{' + dataParts[1]);
-        const locData = JSON.parse()
-
-        setAccelX(accelData["Accel-X"]);
-        setAccelY(accelData["Accel-Y"]);
-        setAccelZ(accelData["Accel-Z"]);
-
-        setGyroX(gyroData["Gyro-X"]);
-        setGyroY(gyroData["Gyro-Y"]);
-        setGyroZ(gyroData["Gyro-Z"]);
-        */
         const accelXMatch = textResponse.match(/"Accel-X"\s*:\s*([0-9.\-]+)/);
         const accelYMatch = textResponse.match(/"Accel-Y"\s*:\s*([0-9.\-]+)/);
         const accelZMatch = textResponse.match(/"Accel-Z"\s*:\s*([0-9.\-]+)/);
@@ -55,17 +41,15 @@ const SensorData = () => {
         setAccelX(accelXMatch ? parseFloat(accelXMatch[1]) : null);
         setAccelY(accelYMatch ? parseFloat(accelYMatch[1]) : null);
         setAccelZ(accelZMatch ? parseFloat(accelZMatch[1]) : null);
-        setAccelMag(Math.sqrt(Math.pow(accelX, 2)+Math.pow(accelY, 2)+Math.pow(accelZ, 2)));
 
         setGyroX(gyroXMatch ? parseFloat(gyroXMatch[1]) : null);
         setGyroY(gyroYMatch ? parseFloat(gyroYMatch[1]) : null);
         setGyroZ(gyroZMatch ? parseFloat(gyroZMatch[1]) : null);
-        setGyroMag(Math.sqrt(Math.pow(gyroX, 2)+Math.pow(gyroY, 2)+Math.pow(gyroZ, 2)));
-
+        
         setLat(latMatch ? parseFloat(latMatch[1]) : null);
         setLng(lngMatch ? parseFloat(lngMatch[1]) : null);
 
-        if (true) {
+        if (accelMag > 8) {
           setStatus('Fallen');
         } else {
           setStatus('Normal');
@@ -77,10 +61,22 @@ const SensorData = () => {
       }
     };
 
-    const intervalId = setInterval(fetchData, 75);
+    const calculateMagnitudes = () => {
+      if (accelX !== null && accelY !== null && accelZ !== null) {
+        setAccelMag(Math.sqrt(Math.pow(accelX, 2) + Math.pow(accelZ, 2)));
+      }
+      if (gyroX !== null && gyroY !== null && gyroZ !== null) {
+        setGyroMag(Math.sqrt(Math.pow(gyroX, 2) + Math.pow(gyroY, 2) + Math.pow(gyroZ, 2)));
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      fetchData();
+      calculateMagnitudes();
+    }, 75);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [accelX, accelY, accelZ, gyroX, gyroY, gyroZ]);
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg text-center">
@@ -95,7 +91,7 @@ const SensorData = () => {
             <p className="text-xl text-gray-700">Accel-X: <span className="font-bold">{accelX}</span></p>
             <p className="text-xl text-gray-700">Accel-Y: <span className="font-bold">{accelY}</span></p>
             <p className="text-xl text-gray-700">Accel-Z: <span className="font-bold">{accelZ}</span></p>
-            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{acelMag}</span></p>
+            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{accelMag}</span></p>
           </div>
 
           <div className="mb-6">
@@ -103,7 +99,13 @@ const SensorData = () => {
             <p className="text-xl text-gray-700">Gyro-X: <span className="font-bold">{gyroX}</span></p>
             <p className="text-xl text-gray-700">Gyro-Y: <span className="font-bold">{gyroY}</span></p>
             <p className="text-xl text-gray-700">Gyro-Z: <span className="font-bold">{gyroZ}</span></p>
-            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{accelMag}</span></p>
+            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{gyroMag}</span></p>
+          </div>
+
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">Location Data:</h2>
+            <p className="text-xl text-gray-700">Latitude: <span className="font-bold">{lat}</span></p>
+            <p className="text-xl text-gray-700">Longitude: <span className="font-bold">{lng}</span></p>
           </div>
 
           <p className={`text-2xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>

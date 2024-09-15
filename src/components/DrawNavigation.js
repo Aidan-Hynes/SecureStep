@@ -7,7 +7,7 @@ export default function DrawNavigation() {
   const space = mapData
     .getByType("space")
     .filter((space) => space.floor.id === mapView.currentFloor.id)[10];
-  const directions = mapView.getDirections(space,Coord);
+  const directions = mapView.getDirections(Coord ,space);
 
   return directions ? <Navigation directions={directions} /> : null;
 }
