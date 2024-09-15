@@ -34,7 +34,7 @@ const SensorData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://10.37.118.129/');
+        const response = await fetch('http://10.37.102.134/');
         
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
@@ -67,10 +67,12 @@ const SensorData = () => {
         setLat(latMatch ? parseFloat(latMatch[1]) : null);
         setLng(lngMatch ? parseFloat(lngMatch[1]) : null);
 
-        if(statusMatch ? parseFloat(statusMatch[1]) : null == 0){
+        if((statusMatch ? parseFloat(statusMatch[1]) : null) === 0){
           setStatus("Standing");
+          setLat(null);
+          setLng(null);
         }
-        else if(statusMatch ? parseFloat(statusMatch[1]) : null == 1){
+        else if((statusMatch ? parseFloat(statusMatch[1]) : null) === 1){
           setStatus("Fallen");
         }
 

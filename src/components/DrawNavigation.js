@@ -15,7 +15,7 @@ export default function DrawNavigation({ location }) {
     const prevLocation = prevLocationRef.current;
 
     // Only proceed if coordinates are valid and have changed
-    if (latitude !== prevLocation?.latitude || longitude !== prevLocation?.longitude) {
+    if ((latitude !== prevLocation?.latitude || longitude !== prevLocation?.longitude) || ((latitude == null) || (longitude == null))) {
       console.log('Coordinates changed. Updating directions.');
 
       // Update previous coordinates
