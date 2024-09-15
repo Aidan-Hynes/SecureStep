@@ -17,7 +17,7 @@ function MyCustomComponent() {
 
 
 
-export default function MapComponent() {
+export default function MapComponent({ location}) {
 
   const { isLoading, error, mapData } = useMapData({
     key: "mik_Qar1NBX1qFjtljLDI52a60753",
@@ -41,7 +41,7 @@ export default function MapComponent() {
       }}>
       <MyCustomComponent />
       
-      <DrawNavigation />
+      <DrawNavigation location = {[location[0],location[1]]}/>
       {/* <DrawPath /> */}
 
       <FloorSelector /> {/* Add FloorSelector component here */}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import MapComponent from './MapComponent'; // Ensure this path is correct
 
 const ResetButton = ({ setStatus }) => {
   const handleReset = () => {
@@ -24,8 +25,8 @@ const SensorData = () => {
   const [gyroMag, setGyroMag] = useState(null);
   const [status, setStatus] = useState('Normal');
   const [error, setError] = useState(null);
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,9 +59,15 @@ const SensorData = () => {
         setGyroX(gyroXMatch ? parseFloat(gyroXMatch[1]) : null);
         setGyroY(gyroYMatch ? parseFloat(gyroYMatch[1]) : null);
         setGyroZ(gyroZMatch ? parseFloat(gyroZMatch[1]) : null);
+
+        if(lat != latMatch ? parseFloat(latMatch[1]) : null ){
+          setLat(latMatch ? parseFloat(latMatch[1]) : null);
+        }
         
-        setLat(latMatch ? parseFloat(latMatch[1]) : null);
-        setLng(lngMatch ? parseFloat(lngMatch[1]) : null);
+        if(lat != lngMatch ? parseFloat(lngMatch[1]) : null ){
+          setLng(lngMatch ? parseFloat(lngMatch[1]) : null);
+        }
+
 
         if (accelMag > 8) {
           setStatus('Fallen');
@@ -119,7 +126,6 @@ const SensorData = () => {
             <p className="text-xl text-gray-700">Longitude: <span className="font-bold">{lng}</span></p>
           </div>
           <div className="p-4">
-            <h1 className="text-xl mb-4">Status: {status}</h1>
             <ResetButton setStatus={setStatus} />
           </div>
 
@@ -128,6 +134,10 @@ const SensorData = () => {
       ) : (
         <p className="text-gray-600 text-lg">Loading data...</p>
       )}
+
+      <div className="mt-8"> {/* Add some margin to the top of the map */}
+        <MapComponent location = {[lng,lat]} />  {/* Render the map below the sensor data */}
+      </div>
     </div>
   );
 };

@@ -6,7 +6,6 @@ const App = () => {
   return (
     <div className="min-h-screen bg-blue-800 bg-pattern flex flex-col items-center justify-center space-y-6">
       <SensorData />
-      <MapComponent />  {/* Render the map below the sensor data */}
     </div>
   );
 };
