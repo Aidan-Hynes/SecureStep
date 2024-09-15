@@ -55,10 +55,12 @@ const SensorData = () => {
         setAccelX(accelXMatch ? parseFloat(accelXMatch[1]) : null);
         setAccelY(accelYMatch ? parseFloat(accelYMatch[1]) : null);
         setAccelZ(accelZMatch ? parseFloat(accelZMatch[1]) : null);
-        
+        setAccelMag(Math.sqrt(Math.pow(accelX, 2)+Math.pow(accelY, 2)+Math.pow(accelZ, 2)));
+
         setGyroX(gyroXMatch ? parseFloat(gyroXMatch[1]) : null);
         setGyroY(gyroYMatch ? parseFloat(gyroYMatch[1]) : null);
         setGyroZ(gyroZMatch ? parseFloat(gyroZMatch[1]) : null);
+        setGyroMag(Math.sqrt(Math.pow(gyroX, 2)+Math.pow(gyroY, 2)+Math.pow(gyroZ, 2)));
 
         setLat(latMatch ? parseFloat(latMatch[1]) : null);
         setLng(lngMatch ? parseFloat(lngMatch[1]) : null);
@@ -93,7 +95,7 @@ const SensorData = () => {
             <p className="text-xl text-gray-700">Accel-X: <span className="font-bold">{accelX}</span></p>
             <p className="text-xl text-gray-700">Accel-Y: <span className="font-bold">{accelY}</span></p>
             <p className="text-xl text-gray-700">Accel-Z: <span className="font-bold">{accelZ}</span></p>
-            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{lat}</span></p>
+            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{acelMag}</span></p>
           </div>
 
           <div className="mb-6">
@@ -101,7 +103,7 @@ const SensorData = () => {
             <p className="text-xl text-gray-700">Gyro-X: <span className="font-bold">{gyroX}</span></p>
             <p className="text-xl text-gray-700">Gyro-Y: <span className="font-bold">{gyroY}</span></p>
             <p className="text-xl text-gray-700">Gyro-Z: <span className="font-bold">{gyroZ}</span></p>
-            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{lng}</span></p>
+            <p className="text-xl text-gray-700">Magnitude: <span className="font-bold">{accelMag}</span></p>
           </div>
 
           <p className={`text-2xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>
