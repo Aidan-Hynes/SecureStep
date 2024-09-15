@@ -16,17 +16,14 @@ Adafruit_MPU6050 mpu;
 sensors_event_t a, g, temp;
 String lat, lng;
 
-const unsigned int loc_poll = 20;
 const unsigned int info_poll = 5;
-unsigned int last_time_loc = 0;
-unsigned int last_time_info = 0;
+unsigned int last_time_info;
 bool fall_state = false;
 
 const char* ssid = "HackTheNorth";
-const char* password = "HTNX2024";
+const char* password = "PASSWORD";
 
-const char* apiKey = "AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
-const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
+const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
 
 //define NTP Client to get time
 WiFiUDP ntpUDP;
@@ -34,6 +31,7 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 // Create a web server on port 80
 ESP8266WebServer server(80);
+
 
 //define get time function
 unsigned long getTime() {
@@ -68,6 +66,7 @@ void OffLED() {
   digitalWrite(PIN_BLUE,  LOW);
 }
 
+
 //define wifi connect function
 void connectWifi(){
   WiFi.begin(ssid, password);
@@ -93,9 +92,11 @@ void connectWifi(){
   Serial.println("Web server started");
   Serial.print("ESP8266 IP Address: ");
   Serial.println(IP_Address);
-
   delay(1000);
+
+  last_time_info = getTime();
 }
+
 
 //This function will handle incoming HTTP requests
 void handleRoot() {
@@ -200,17 +201,14 @@ void setup() {
 
 void loop() {
   unsigned int curr_time = getTime();
-  // if (curr_time - last_time_loc >= loc_poll) {
-  //   getLocation();
-  //   last_time_loc = curr_time;
-  // }
-
-  // if (curr_time - last_time_info >= info_poll) {
-  //   RedLED();
-  // }
-  // else if (curr_time - last_time_info >= info_poll*3) {
-  //   connectWifi();
-  // }
+  if (curr_time - last_time_info >= info_poll*3) {
+    connectWifi();
+  }
+  else if (curr_time - last_time_info >= info_poll) {
+    RedLED();
+    delay(100);
+    OffLED();
+  }
 
   //get new sensor events with the readings
   mpu.getEvent(&a, &g, &temp);
