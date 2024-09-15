@@ -7,7 +7,6 @@ import DrawNavigation from "./DrawNavigation";
 
 
 
-
 function MyCustomComponent() {
   const { mapView, mapData } = useMap();
 
@@ -18,9 +17,8 @@ function MyCustomComponent() {
 
 
 
-export default function App() {
-  // See Demo API key Terms and Conditions
-  // https://developer.mappedin.com/v6/demo-keys-and-maps/
+export default function MapComponent() {
+
   const { isLoading, error, mapData } = useMapData({
     key: "mik_Qar1NBX1qFjtljLDI52a60753",
     secret: "mis_CXFS9WnkQkzQmy9GCt4ucn2D68zNRgVa2aiJj5hEIFM8aa40fee",
@@ -42,8 +40,10 @@ export default function App() {
           .find((floor) => floor.name.includes("2")),
       }}>
       <MyCustomComponent />
+      
       <DrawNavigation />
       {/* <DrawPath /> */}
+
       <FloorSelector /> {/* Add FloorSelector component here */}
 
     </MapView>

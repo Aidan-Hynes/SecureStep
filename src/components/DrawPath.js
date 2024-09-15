@@ -2,6 +2,11 @@ import { Path, useMap } from "@mappedin/react-sdk";
 
 export default function DrawPath() {
   const { mapData, mapView } = useMap();
+  const coordinates = {
+    floor : null,
+    latitude: 43.473139, 
+    longitude: -80.539777
+  };
 
   const space1 = mapData
     .getByType("space")
@@ -14,7 +19,7 @@ export default function DrawPath() {
     return null;
   }
 
-  const directions = mapView.getDirections(space1, space2);
+  const directions = mapView.getDirections(coordinates, space2);
 
   return directions ? (
     <Path
