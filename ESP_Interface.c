@@ -17,18 +17,20 @@ sensors_event_t a, g, temp;
 String lat, lng;
 
 const unsigned int loc_poll = 20;
-unsigned int last_time = 0;
+const unsigned int info_poll = 5;
+unsigned int last_time_loc = 0;
+unsigned int last_time_info = 0;
+bool fall_state = false;
 
 const char* ssid = "HackTheNorth";
-const char* password = "PASSWORD";
+const char* password = "HTNX2024";
 
-const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
+const char* apiKey = "AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
+const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
 
 //define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
-
-const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
 
 // Create a web server on port 80
 ESP8266WebServer server(80);
@@ -66,15 +68,44 @@ void OffLED() {
   digitalWrite(PIN_BLUE,  LOW);
 }
 
+//define wifi connect function
+void connectWifi(){
+  WiFi.begin(ssid, password);
+
+  //Wait for connection
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Connecting to WiFi...");
+
+    BlueLED();
+    delay(500);
+    OffLED();
+    delay(500);
+  }
+
+  Serial.println("Connected to WiFi"); 
+  BlueLED();
+  
+  // Start the web server
+  server.begin();
+  server.on("/", handleRoot);
+  String IP_Address = WiFi.localIP().toString();
+
+  Serial.println("Web server started");
+  Serial.print("ESP8266 IP Address: ");
+  Serial.println(IP_Address);
+
+  delay(1000);
+}
 
 //This function will handle incoming HTTP requests
 void handleRoot() {
   //Send JSON data
-  GreenLED();  
+  last_time_info = getTime(); 
   String jsonAccel = "{\"Accel-X\" : " + String(a.acceleration.x) + "," + "\"Accel-Y\" : " + String(a.acceleration.y) + "," + "\"Accel-Z\" : " + String(a.acceleration.z) + "}";
   String jsonGyro = "{\"Gyro-X\" : " + String(g.gyro.x) + "," + "\"Gyro-Y\" : " + String(g.gyro.y) + "," + "\"Gyro-Z\" : " + String(g.gyro.z) + "}"; 
   String jsonLoc = "{\"Lat\" : " + String(lat) + "," + "\"Lng\" : " + String(lng) + "}";
-  String jsonResponse = jsonAccel + "," + jsonGyro + "," + jsonLoc;
+  String jsonFall = "{\"Fall State\" : " + String(fall_state) + "}";
+  String jsonResponse = jsonAccel + "," + jsonGyro + "," + jsonLoc + "," + jsonFall;
   Serial.println(jsonResponse);
   
   server.sendHeader("Access-Control-Allow-Origin", "*"); // Allow CORS
@@ -122,7 +153,7 @@ void getLocation() {
     Serial.println("Response:");
     Serial.println(payload);
     lat = payload.substring(payload.indexOf("lat")+6, payload.indexOf(","));
-    lng = payload.substring(payload.indexOf("lng")+6, payload.indexOf("}"));
+    lng = payload.substring(payload.indexOf("lng")+6, payload.indexOf("}")-3);
   }
   else {
     Serial.print("Error on HTTP request: ");
@@ -163,42 +194,40 @@ void setup() {
   Serial.println("");
   delay(100);
 
-  //Wifi connection
-  WiFi.begin(ssid, password);
-
-  //Wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.println("Connecting to WiFi...");
-
-    BlueLED();
-    delay(500);
-    OffLED();
-    delay(500);
-  }
-
-  Serial.println("Connected to WiFi"); 
-  BlueLED();
-
-  // Start the web server
-  server.begin();
-  server.on("/", handleRoot);
-  String IP_Address = WiFi.localIP().toString();
-
-  Serial.println("Web server started");
-  Serial.print("ESP8266 IP Address: ");
-  Serial.println(IP_Address);
+  connectWifi();
 }
 
 
 void loop() {
   unsigned int curr_time = getTime();
-  if (curr_time - last_time >= loc_poll) {
-    getLocation();
-    last_time = curr_time;
-  }
+  // if (curr_time - last_time_loc >= loc_poll) {
+  //   getLocation();
+  //   last_time_loc = curr_time;
+  // }
+
+  // if (curr_time - last_time_info >= info_poll) {
+  //   RedLED();
+  // }
+  // else if (curr_time - last_time_info >= info_poll*3) {
+  //   connectWifi();
+  // }
+
   //get new sensor events with the readings
   mpu.getEvent(&a, &g, &temp);
 
-  delay(10);
   server.handleClient();
+  
+  double norm = sqrt((a.acceleration.x*a.acceleration.x)+(a.acceleration.z*a.acceleration.z));
+
+  if(norm > 8 && !fall_state) {
+    RedLED();
+    fall_state = true;
+    getLocation();
+  }
+  else if(norm < 8){
+    GreenLED();
+    fall_state = false;
+  }
+
+  delay(25);
 }
