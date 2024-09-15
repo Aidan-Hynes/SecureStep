@@ -28,8 +28,8 @@ const SensorData = () => {
   const [gyroMag, setGyroMag] = useState(null);
   const [status, setStatus] = useState('Standing');
   const [error, setError] = useState(null);
-  const [lat, setLat] = useState('43.4727807');
-  const [lng, setLng] = useState('-80.5393939');
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
