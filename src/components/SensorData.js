@@ -25,8 +25,8 @@ const SensorData = () => {
   const [gyroMag, setGyroMag] = useState(null);
   const [status, setStatus] = useState('Normal');
   const [error, setError] = useState(null);
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
+  const [lat, setLat] = useState('43.4727807');
+  const [lng, setLng] = useState('-80.5393939');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -74,10 +74,10 @@ const SensorData = () => {
 
     const calculateMagnitudes = () => {
       if (accelX !== null && accelY !== null && accelZ !== null) {
-        setAccelMag(Math.sqrt(Math.pow(accelX, 2) + Math.pow(accelZ, 2)));
+        setAccelMag(Math.sqrt(Math.pow(accelX, 2) + Math.pow(accelZ, 2)).toFixed(2));
       }
       if (gyroX !== null && gyroY !== null && gyroZ !== null) {
-        setGyroMag(Math.sqrt(Math.pow(gyroX, 2) + Math.pow(gyroY, 2) + Math.pow(gyroZ, 2)));
+        setGyroMag(Math.sqrt(Math.pow(gyroX, 2) + Math.pow(gyroY, 2) + Math.pow(gyroZ, 2)).toFixed(2));
       }
     };
 
@@ -90,49 +90,47 @@ const SensorData = () => {
   }, [accelX, accelY, accelZ, gyroX, gyroY, gyroZ]);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg text-center">
-      <div className="flex flex-row justify-between">
-        <div className="flex-1 border-4 border-gray-300 p-6 mr-4 text-left overflow-hidden">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">ESP8266 Sensor Data</h1>
+    <div className="max-w-8xl mx-auto p-8 bg-white rounded-lg shadow-lg">
+      <div className="flex flex-row gap-6">
+        <div className="w-full border-4 border-gray-300 p-8 text-left overflow-auto">
           {error && !accelX && !accelY && !accelZ && !gyroX && !gyroY && !gyroZ && (
-            <p className="text-red-500 text-lg mb-4">Error: {error}</p>
+            <p className="text-red-500 text-xl mb-6">Error: {error}</p>
           )}
           {accelX !== null && accelY !== null && accelZ !== null && gyroX !== null && gyroY !== null && gyroZ !== null ? (
             <>
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2">Accelerometer Data:</h2>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Accel-X: <span className="font-bold">{accelX}</span></p>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Accel-Y: <span className="font-bold">{accelY}</span></p>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Accel-Z: <span className="font-bold">{accelZ}</span></p>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Magnitude: <span className="font-bold">{accelMag}</span></p>
+              <div className="mb-8">
+                <h2 className="text-3xl font-semibold text-gray-800 mb-4">Accelerometer Data:</h2>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Accel-X: <span className="font-bold">{accelX}</span></p>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Accel-Y: <span className="font-bold">{accelY}</span></p>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Accel-Z: <span className="font-bold">{accelZ}</span></p>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Magnitude: <span className="font-bold">{accelMag}</span></p>
               </div>
 
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2">Gyroscope Data:</h2>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Gyro-X: <span className="font-bold">{gyroX}</span></p>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Gyro-Y: <span className="font-bold">{gyroY}</span></p>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Gyro-Z: <span className="font-bold">{gyroZ}</span></p>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Magnitude: <span className="font-bold">{gyroMag}</span></p>
+              <div className="mb-8">
+                <h2 className="text-3xl font-semibold text-gray-800 mb-4">Gyroscope Data:</h2>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Gyro-X: <span className="font-bold">{gyroX}</span></p>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Gyro-Y: <span className="font-bold">{gyroY}</span></p>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Gyro-Z: <span className="font-bold">{gyroZ}</span></p>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Magnitude: <span className="font-bold">{gyroMag}</span></p>
               </div>
 
-              <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2">Location Data:</h2>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Latitude: <span className="font-bold">{lat}</span></p>
-                <p className="text-lg text-gray-700 whitespace-nowrap">Longitude: <span className="font-bold">{lng}</span></p>
+              <div className="mb-8">
+                <h2 className="text-3xl font-semibold text-gray-800 mb-4">Location Data:</h2>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Latitude: <span className="font-bold">{lat}</span></p>
+                <p className="text-xl text-gray-700 whitespace-nowrap">Longitude: <span className="font-bold">{lng}</span></p>
               </div>
-              <div className="mb-6">
+              <div className="mb-8">
                 <ResetButton setStatus={setStatus} />
               </div>
-
-              <p className={`text-2xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>
+              <p className={`text-3xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>
             </>
           ) : (
-            <p className="text-gray-600 text-lg">Loading data...</p>
+            <p className="text-gray-600 text-xl">Loading data...</p>
           )}
         </div>
 
-        <div className="flex-1 border-4 border-gray-300 p-6 text-center">
-          <MapComponent location={[lng, lat]} />  {/* Render the map beside the sensor data */}
+        <div className="w-full border-4 border-gray-300 p-8">
+          <MapComponent location={[lng, lat]} />
         </div>
       </div>
     </div>

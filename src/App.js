@@ -4,7 +4,7 @@ import MapComponent from './components/MapComponent';  // Import the map compone
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-blue-800 bg-pattern flex flex-col items-center justify-center space-y-6">
+    <div className="min-h-screen bg-blue-200 bg-pattern flex flex-col items-center justify-center space-y-6">
       <SensorData />
     </div>
   );
