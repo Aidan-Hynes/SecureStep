@@ -129,9 +129,6 @@ const SensorData = () => {
                 <p className="text-xl text-gray-700 whitespace-nowrap">Latitude: <span className="font-bold">{lat}</span></p>
                 <p className="text-xl text-gray-700 whitespace-nowrap">Longitude: <span className="font-bold">{lng}</span></p>
               </div>
-              <div className="flex justify-center items-center mb-8">
-                <ResetButton setStatus={setStatus} />
-              </div>
               <p className={`text-3xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>
             </>
           ) : (
