@@ -15,10 +15,9 @@ sensors_event_t a, g, temp;
 String lat, lng;
 
 const char* ssid = "HackTheNorth";
-const char* password = "HTNX2024";
+const char* password = "PASSWORD";
 
-const char* apiKey = "AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
-const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
+const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
 
 // Create a web server on port 80
 ESP8266WebServer server(80);
