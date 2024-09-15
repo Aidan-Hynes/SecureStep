@@ -7,10 +7,13 @@ const ResetButton = ({ setStatus }) => {
   };
 
   return (
-    <button
-      onClick={handleReset}
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Reset
-    </button>
+    <div className="flex flex-col w-1/2 mx-auto">
+      <button
+        onClick={handleReset}
+        className="bg-blue-400 hover:bg-blue-300 text-white font-bold py-2 px-4 rounded w-full">
+        Resolved
+      </button>
+    </div>
   );
 };
 
@@ -23,7 +26,7 @@ const SensorData = () => {
   const [gyroY, setGyroY] = useState(null);
   const [gyroZ, setGyroZ] = useState(null);
   const [gyroMag, setGyroMag] = useState(null);
-  const [status, setStatus] = useState('Normal');
+  const [status, setStatus] = useState('Standing');
   const [error, setError] = useState(null);
   const [lat, setLat] = useState('43.4727807');
   const [lng, setLng] = useState('-80.5393939');
@@ -51,6 +54,8 @@ const SensorData = () => {
         const latMatch = textResponse.match(/"Lat"\s*:\s*([0-9.\-]+)/);
         const lngMatch = textResponse.match(/"Lng"\s*:\s*([0-9.\-]+)/);
 
+        const statusMatch = textResponse.match(/"Fall State"\s*:\s*([0-9.\-]+)/);
+
         setAccelX(accelXMatch ? parseFloat(accelXMatch[1]) : null);
         setAccelY(accelYMatch ? parseFloat(accelYMatch[1]) : null);
         setAccelZ(accelZMatch ? parseFloat(accelZMatch[1]) : null);
@@ -62,8 +67,11 @@ const SensorData = () => {
         setLat(latMatch ? parseFloat(latMatch[1]) : null);
         setLng(lngMatch ? parseFloat(lngMatch[1]) : null);
 
-        if (accelMag > 8) {
-          setStatus('Fallen');
+        if(statusMatch ? parseFloat(statusMatch[1]) : null == 0){
+          setStatus("Standing");
+        }
+        else if(statusMatch ? parseFloat(statusMatch[1]) : null == 1){
+          setStatus("Fallen");
         }
 
         setError(null);
@@ -119,7 +127,7 @@ const SensorData = () => {
                 <p className="text-xl text-gray-700 whitespace-nowrap">Latitude: <span className="font-bold">{lat}</span></p>
                 <p className="text-xl text-gray-700 whitespace-nowrap">Longitude: <span className="font-bold">{lng}</span></p>
               </div>
-              <div className="mb-8">
+              <div className="flex justify-center items-center mb-8">
                 <ResetButton setStatus={setStatus} />
               </div>
               <p className={`text-3xl font-semibold ${status === 'Fallen' ? 'text-red-600' : 'text-green-600'}`}>Status: {status}</p>
