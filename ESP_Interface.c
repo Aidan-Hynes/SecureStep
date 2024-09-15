@@ -21,17 +21,14 @@ unsigned int last_time = 0;
 
 const char* ssid = "HackTheNorth";
 const char* password = "PASSWORD";
-<<<<<<< HEAD
 
 const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
 
 //define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
-=======
 
 const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
->>>>>>> f03df1af120dfd65f1e5ca36e51a5c72203de23e
 
 // Create a web server on port 80
 ESP8266WebServer server(80);
