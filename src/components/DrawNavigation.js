@@ -30,6 +30,7 @@ export default function DrawNavigation({ location }) {
       const newDirections = mapView.getDirections(Coord, space2);
       setDirections(newDirections);
     } else {
+        //setDirections(null);
       console.log('Coordinates did not change. Skipping update.');
     }
   }, [latitude, longitude, mapData, mapView]);
