@@ -23,10 +23,10 @@ unsigned int last_time_info = 0;
 bool fall_state = false;
 
 const char* ssid = "HackTheNorth";
-const char* password = "HTNX2024";
+const char* password = "PASSWORD";
 
 const char* apiKey = "AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
-const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
+const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
 
 //define NTP Client to get time
 WiFiUDP ntpUDP;
