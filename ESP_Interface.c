@@ -2,6 +2,8 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecureBearSSL.h>  // For SSL/TLS
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
@@ -14,14 +16,27 @@ Adafruit_MPU6050 mpu;
 sensors_event_t a, g, temp;
 String lat, lng;
 
-const char* ssid = "HackTheNorth";
-const char* password = "HTNX2024";
+const unsigned int loc_poll = 20;
+unsigned int last_time = 0;
 
-const char* apiKey = "AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
-const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAi2tTIYkHWwyQASN2nBa_6plmzPO1RkxA";
+const char* ssid = "HackTheNorth";
+const char* password = "PASSWORD";
+
+const char* geolocationUrl = "https://www.googleapis.com/geolocation/v1/geolocate?key=API_KEY";
+
+//define NTP Client to get time
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 // Create a web server on port 80
 ESP8266WebServer server(80);
+
+//define get time function
+unsigned long getTime() {
+  timeClient.update();
+  unsigned long curr_time = timeClient.getEpochTime();
+  return curr_time;
+}
 
 
 //Set LED Light Functions
@@ -56,7 +71,7 @@ void handleRoot() {
   GreenLED();  
   String jsonAccel = "{\"Accel-X\" : " + String(a.acceleration.x) + "," + "\"Accel-Y\" : " + String(a.acceleration.y) + "," + "\"Accel-Z\" : " + String(a.acceleration.z) + "}";
   String jsonGyro = "{\"Gyro-X\" : " + String(g.gyro.x) + "," + "\"Gyro-Y\" : " + String(g.gyro.y) + "," + "\"Gyro-Z\" : " + String(g.gyro.z) + "}"; 
-  String jsonLoc = "{\"Lat\" : " + String(lat) + "," + "\"Lat\" : " + String(lng) + "}";
+  String jsonLoc = "{\"Lat\" : " + String(lat) + "," + "\"Lng\" : " + String(lng) + "}";
   String jsonResponse = jsonAccel + "," + jsonGyro + "," + jsonLoc;
   Serial.println(jsonResponse);
   
@@ -117,7 +132,6 @@ void getLocation() {
 
 
 void setup() {
-
   pinMode(PIN_RED,   OUTPUT);
   pinMode(PIN_GREEN, OUTPUT);
   pinMode(PIN_BLUE,  OUTPUT);  
@@ -175,7 +189,12 @@ void setup() {
 
 
 void loop() {
- //Get new sensor events with the readings
+  unsigned int curr_time = getTime();
+  if (curr_time - last_time >= loc_poll) {
+    getLocation();
+    last_time = curr_time;
+  }
+  //get new sensor events with the readings
   mpu.getEvent(&a, &g, &temp);
 
   delay(10);
