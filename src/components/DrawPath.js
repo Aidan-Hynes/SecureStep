@@ -10,7 +10,7 @@ export default function DrawPath() {
     .getByType("point-of-interest")
     .find((poi) => poi.name.includes("Sponsor Bay"));
 
-  if (!space1 || !space2) {
+  if (space1 == null || space2 == null) {
     return null;
   }
 

@@ -1,6 +1,12 @@
 import React from "react";
 import { MapView, useMapData, useMap, Label } from "@mappedin/react-sdk";
 import "@mappedin/react-sdk/lib/esm/index.css";
+import FloorSelector from "./FloorSelector";
+import DrawPath from "./DrawPath";
+import DrawNavigation from "./DrawNavigation";
+
+
+
 
 function MyCustomComponent() {
   const { mapView, mapData } = useMap();
@@ -9,6 +15,8 @@ function MyCustomComponent() {
     return <Label target={space.center} text={space.name} />;
   });
 }
+
+
 
 export default function App() {
   // See Demo API key Terms and Conditions
@@ -28,8 +36,16 @@ export default function App() {
   }
 
   return mapData ? (
-    <MapView mapData={mapData} style={{ width: "650px", height: "650px" }}>
+    <MapView mapData={mapData} style={{ width: "650px", height: "650px" }} options={{
+        initialFloor: mapData
+          .getByType("floor")
+          .find((floor) => floor.name.includes("2")),
+      }}>
       <MyCustomComponent />
+      <DrawNavigation />
+      {/* <DrawPath /> */}
+      <FloorSelector /> {/* Add FloorSelector component here */}
+
     </MapView>
   ) : null;
 }
